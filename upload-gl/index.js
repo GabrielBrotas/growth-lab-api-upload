@@ -73,9 +73,10 @@ exports.handler = async (event) => {
             statusCode: 200,
             body: JSON.stringify({
                 Item: item
-            }),
+            })
         };
     } catch(error) {
+        console.log(error)
         return {
             statusCode: 400,
             body: JSON.stringify({

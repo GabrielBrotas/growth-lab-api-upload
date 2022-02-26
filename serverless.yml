@@ -4,7 +4,7 @@ provider:
   name: aws
   stage: ${opt:stage, 'dev'}
   region: ${opt:stage, 'us-east-1'}
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   timeout: 5
   memorySize: 128
   
@@ -13,29 +13,23 @@ provider:
       name: growth-lab-files-bucket
 
 functions:
-  gl-get-file:
-    handler: get-file/index.handler
-    description: Get file from S3 and data from DynamoDB
-    events:
-      - httpApi:
-          method: get
-          path: /file/{id}
-    role: LambdaGetFileRole
-    # package:
-    #   patterns:
-    #     - 'get-file/*'
+  - gl-get-file:
+      handler: get-file/index.handler
+      description: Get file from S3 and data from DynamoDB
+      events:
+        - httpApi:
+            method: get
+            path: /file/{id}
+      role: LambdaGetFileRole
 
-  gl-put-file:
-    handler: upload-gl/index.handler
-    description: Put file to S3 and DynamoDB
-    events:
-      - httpApi:
-          method: post
-          path: /upload
-    role: LambdaPutFileRole
-    # package:
-    #   patterns:
-    #     - 'upload-gl/*'
+  - gl-put-file:
+      handler: upload-gl/index.handler
+      description: Put file to S3 and DynamoDB
+      events:
+        - httpApi:
+            method: post
+            path: /upload
+      role: LambdaPutFileRole
 
 resources:
   Resources:
