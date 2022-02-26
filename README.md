@@ -1,40 +1,40 @@
-Growth Lab Inc - Upload System
+# Growth Lab Inc - Upload System
 
 
 Build a lambda function in NodeJS that has an API using API Gateway. It takes a file as input, encrypts the file using a Public Key, saves it to S3, and then returns a 200 Status with the Files URL.
 
 
-1 - Create API Gateway (HTTP)
+<b>1 - Create API Gateway (HTTP)</b> <br />
 ![image](https://user-images.githubusercontent.com/63565773/155828571-53c4ec0b-86c8-4603-80ae-ef211c292f94.png)
 
-Put a name
-
+Put a name  <br />
 ![image](https://user-images.githubusercontent.com/63565773/155828579-d4eb7daa-4ae9-4124-a62f-919aa5a74412.png)
 
-Leave all the rest default and create
+Leave all the rest default and create  <br />
 ![image](https://user-images.githubusercontent.com/63565773/155828588-bdee9e92-1cb2-490c-a315-4df98d353281.png)
 
-
-2 - Create S3 Bucket
-Put a name and allow public access
+<b>2 - Create S3 Bucket</b> <br />
+Put a name and allow public access  <br />
 ![image](https://user-images.githubusercontent.com/63565773/155828597-0ddc7280-4a6e-4ca6-b664-d86881694ca6.png)
 
-Enable default encryption and select SSE-S3 option so aws can manage the encryption key for you.
+Enable default encryption and select SSE-S3 option so aws can manage the encryption key for you.  <br />
 ![image](https://user-images.githubusercontent.com/63565773/155828604-b310a672-7639-471e-85fb-70bfe39aaeff.png)
-
+ <br />
 Create bucket
 
-4 - Create DynamoDB Table (LookUp)
+<b>4 - Create DynamoDB Table (LookUp) </b> <br />
 ![image](https://user-images.githubusercontent.com/63565773/155828611-ffe159bb-e4a8-4805-b32a-5f211102f37f.png)
 
 Leave all the rest default and create
 
+<b>5 - Create the both Lambda of this folder </b> <br />
 
-5 - Create the both Lambda in this folder 
-    5.1 - get-file lambda
-    this lambda role must have these polices:
-        5.1.1 - s3 access
-        ```
+Polices:
+
+<b>5.1 - get-file lambda</b> <br />
+this lambda role must have these polices: <br />
+5.1.1 - s3 access <br />
+        
         {
             "Version": "2012-10-17",
             "Statement": [
@@ -52,9 +52,10 @@ Leave all the rest default and create
                 }
             ]
         }
-        ```
-        5.1.2 - dynamodb access
-        ```
+     
+<br />
+5.1.2 - dynamodb access <br />
+    
         {
             "Version": "2012-10-17",
             "Statement": [
@@ -79,14 +80,11 @@ Leave all the rest default and create
                 }
             ]
         }
-        ```
-
-
-
-    5.2 - upload-gl lambda (make sure it has the node_modules dependencies)
-    this lambda role must have these polices:
-    5.1.1 - s3 access
-        ```
+<br />
+<b>5.2 - upload-gl lambda (make sure it has the node_modules dependencies) </b> <br />
+this lambda role must have these polices: <br />
+5.2.1 - s3 access <br />
+        
         {
             "Version": "2012-10-17",
             "Statement": [
@@ -108,9 +106,9 @@ Leave all the rest default and create
                 }
             ]
         }
-        ```
-        5.1.2 - dynamodb access
-        ```
+<br />
+5.2.2 - dynamodb access <br />
+        
         {
             "Version": "2012-10-17",
             "Statement": [
@@ -143,10 +141,10 @@ Leave all the rest default and create
                 }
             ]
         }
-        ```
+        
+<br />
 
-
-6 - Attach the lambdas to the API Gateway
+<b>6 - Attach the lambdas to the API Gateway</b>
 ![image](https://user-images.githubusercontent.com/63565773/155828838-15b281d8-04a9-40c4-9d3b-7e5ec439380a.png)
 
 
