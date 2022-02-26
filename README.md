@@ -1,5 +1,9 @@
 # Growth Lab Inc - Upload System
 
+### How to run serverless
+```
+serverless deploy -v
+```
 
 Build a lambda function in NodeJS that has an API using API Gateway. It takes a file as input, encrypts the file using a Public Key, saves it to S3, and then returns a 200 Status with the Files URL.
 

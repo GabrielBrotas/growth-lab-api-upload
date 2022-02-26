@@ -1,0 +1,165 @@
+service: growth-lab-api
+
+provider:
+  name: aws
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:stage, 'us-east-1'}
+  runtime: nodejs12.x
+  timeout: 5
+  memorySize: 128
+  
+  s3:
+    growth-lab-files-bucket:
+      name: growth-lab-files-bucket
+
+
+functions:
+  gl-get-file:
+    handler: get-file/index.handler
+    description: Get file from S3 and data from DynamoDB
+    events:
+      - httpApi:
+          method: get
+          path: /file/{id}
+    role: LambdaGetFileRole
+
+  gl-put-file:
+    handler: upload-gl/index.handler
+    description: Put file to S3 and DynamoDB
+    events:
+      - httpApi:
+          method: post
+          path: /upload
+    role: LambdaPutFileRole
+
+resources:
+  Resources:
+    S3Bucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: growth-lab-bucket-files
+        VersioningConfiguration:
+          Status: Enabled
+        PublicAccessBlockConfiguration:
+          BlockPublicAcls: true
+          BlockPublicPolicy: true
+          RestrictPublicBuckets: true
+        BucketEncryption:
+          ServerSideEncryptionConfiguration:
+            - ServerSideEncryptionByDefault:
+                SSEAlgorithm: AES256
+    
+    # AttachmentsBucketAllowPublicReadPolicy:
+    #   Type: AWS::S3::BucketPolicy
+    #   Properties:
+    #     Bucket: growth-lab-bucket-files
+    #     PolicyDocument:
+    #       Version: '2012-10-17'
+    #       Statement: 
+    #         - Sid: AllowPublicRead
+    #           Effect: Allow
+    #           Action: s3:GetObject
+    #           Resource: arn:aws:s3:::growth-lab-bucket-files/*
+    #           Principal:
+    #             AWS: '*'
+              
+    #         - Sid: DenyIncorrectEncryptionHeader
+    #           Effect: Deny
+    #           Principal:
+    #             AWS: '*'
+    #           Action: s3:PutObject
+    #           Resource: arn:aws:s3:::growth-lab-bucket-files/*
+    #           Condition:
+    #             StringNotEquals:
+    #               s3:x-amz-server-side-encryption:AES256
+
+    LookupTable:
+        Type: 'AWS::DynamoDB::Table'
+        Properties:
+          AttributeDefinitions:
+            - AttributeName: _id
+              AttributeType: S
+          KeySchema:
+            - AttributeName: _id
+              KeyType: HASH
+          BillingMode: PAY_PER_REQUEST
+          TableName: LookUp
+
+    LambdaGetFileRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /my/cust/path/
+        RoleName: LambdaGetFileRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: allow-get-item-from-s3-and-dynamodb
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: 
+                    - s3:GetObject
+                    - s3:GetObjectAcl
+                    - s3:GetObject
+                    - s3:GetObjectVersionAcl
+                    - s3:GetObjectVersionAttributes
+                    - s3:GetObjectVersion
+                  Resource: arn:aws:s3:::*/*
+
+                - Effect: Allow
+                  Action: 
+                    - dynamodb:GetItem
+                    - dynamodb:Scan
+                    - dynamodb:Query
+                  Resource: arn:aws:dynamodb:*:*:table/*
+
+                - Effect: Allow
+                  Action: 
+                    - dynamodb:Scan
+                    - dynamodb:Query
+                  Resource: arn:aws:dynamodb:us-east-1:*:table/LookUp/index/*
+
+    LambdaPutFileRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Path: /my/cust/path/
+        RoleName: LambdaPutFileRole
+        AssumeRolePolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - lambda.amazonaws.com
+              Action: sts:AssumeRole
+        Policies:
+          - PolicyName: allow-get-and-put-item-to-s3-and-dynamodb
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action: 
+                    - dynamodb:PutItem
+                    - dynamodb:GetItem
+                    - dynamodb:Scan
+                    - dynamodb:Query
+                    - dynamodb:UpdateItem
+                  Resource: arn:aws:dynamodb:*:*:table/*
+
+                - Effect: Allow
+                  Action: 
+                    - dynamodb:Scan
+                    - dynamodb:Query
+                  Resource: arn:aws:dynamodb:us-east-1:*:table/LookUp/index/*
+
+                - Effect: Allow
+                  Action: 
+                    - dynamodb:ListTables
+                  Resource: "*"

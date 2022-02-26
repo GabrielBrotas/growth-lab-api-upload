@@ -1,0 +1,11 @@
+{
+  "name": "growth-lab-uploadfile",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:GabrielBrotas/growth-lab-api-upload.git",
+  "author": "GabrielBrotas <gabrielbrotas22@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "serverless": "^3.4.0"
+  }
+}

@@ -7,9 +7,8 @@ const s3 = new AWS.S3();
 
 // const kms = new AWS.KMS({apiVersion: '2014-11-01'});
 
-const S3_BUCKET = 'growth-lab-files'
 const DYNAMO_TABLE = 'LookUp'
-
+const S3_BUCKET = 'growth-lab-bucket-files'
 
 const formatRequest = event => {
   return {
