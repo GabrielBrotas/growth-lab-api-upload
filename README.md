@@ -147,6 +147,79 @@ this lambda role must have these polices: <br />
 <b>6 - Attach the lambdas to the API Gateway</b>
 ![image](https://user-images.githubusercontent.com/63565773/155828838-15b281d8-04a9-40c4-9d3b-7e5ec439380a.png)
 
+### API Call Example
+```
+[POST] https://<your api url>/upload
+[BODY] 
+ {
+  "fileName": "mytext",
+  "base64": "data:text/plain;base64,YXNkc3NhZHNhZGQgYXNkIGFzZHMgYQ=="
+ }
+ 
+[RESPONSE]
+{
+  "Item": {
+    "_id": "05eea8d1-a9fb-4ec3-bb62-5d3d2554bfac",
+    "fileName": "myimage",
+    "mimeType": "png",
+    "contentType": "image/png",
+    "encrypted": true,
+    "createdAt": "2022-02-26T03:55:20.411Z"
+  }
+}
 
+-----------------------------
+
+[GET] https://<your api url>/file/<file id>
+
+[RESPONSE]
+{
+  "data": {
+    "fileName": "mytext",
+    "mimeType": "txt",
+    "_id": "68011579-299a-4a9c-98d5-f863ce3a39e0",
+    "createdAt": "2022-02-26T04:40:47.114Z",
+    "encrypted": true,
+    "contentType": "text/plain",
+    "url": "https://growth-lab-files.s3.amazonaws.com/68011579-299a-4a9c-98d5-f863ce3a39e0.txt"
+  },
+  "obj": {
+    "AcceptRanges": "bytes",
+    "LastModified": "2022-02-26T04:40:47.000Z",
+    "ContentLength": 22,
+    "ETag": "\"dd479fd5fee236b72d83fc0271bec27a\"",
+    "ContentType": "text/plain",
+    "ServerSideEncryption": "AES256",
+    "Metadata": {},
+    "Body": {
+      "type": "Buffer",
+      "data": [
+        97,
+        115,
+        100,
+        115,
+        115,
+        97,
+        100,
+        115,
+        97,
+        100,
+        100,
+        32,
+        97,
+        115,
+        100,
+        32,
+        97,
+        115,
+        100,
+        115,
+        32,
+        97
+      ]
+    }
+  }
+}
+```
 
 
