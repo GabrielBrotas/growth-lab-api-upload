@@ -12,7 +12,6 @@ provider:
     growth-lab-files-bucket:
       name: growth-lab-files-bucket
 
-
 functions:
   gl-get-file:
     handler: get-file/index.handler
@@ -22,6 +21,9 @@ functions:
           method: get
           path: /file/{id}
     role: LambdaGetFileRole
+    # package:
+    #   patterns:
+    #     - 'get-file/*'
 
   gl-put-file:
     handler: upload-gl/index.handler
@@ -31,6 +33,9 @@ functions:
           method: post
           path: /upload
     role: LambdaPutFileRole
+    # package:
+    #   patterns:
+    #     - 'upload-gl/*'
 
 resources:
   Resources:
@@ -38,40 +43,37 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: growth-lab-bucket-files
-        VersioningConfiguration:
-          Status: Enabled
         PublicAccessBlockConfiguration:
           BlockPublicAcls: true
-          BlockPublicPolicy: true
+          BlockPublicPolicy: false
           RestrictPublicBuckets: true
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
                 SSEAlgorithm: AES256
     
-    # AttachmentsBucketAllowPublicReadPolicy:
-    #   Type: AWS::S3::BucketPolicy
-    #   Properties:
-    #     Bucket: growth-lab-bucket-files
-    #     PolicyDocument:
-    #       Version: '2012-10-17'
-    #       Statement: 
-    #         - Sid: AllowPublicRead
-    #           Effect: Allow
-    #           Action: s3:GetObject
-    #           Resource: arn:aws:s3:::growth-lab-bucket-files/*
-    #           Principal:
-    #             AWS: '*'
+    AttachmentsBucketAllowPublicReadPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket: growth-lab-bucket-files
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement: 
+            - Sid: AllowPublicRead
+              Effect: Allow
+              Action: s3:GetObject
+              Resource: arn:aws:s3:::growth-lab-bucket-files/*
+              Principal:
+                AWS: '*'
               
-    #         - Sid: DenyIncorrectEncryptionHeader
-    #           Effect: Deny
-    #           Principal:
-    #             AWS: '*'
-    #           Action: s3:PutObject
-    #           Resource: arn:aws:s3:::growth-lab-bucket-files/*
-    #           Condition:
-    #             StringNotEquals:
-    #               s3:x-amz-server-side-encryption:AES256
+            - Sid: DenyIncorrectEncryptionHeader
+              Effect: Deny
+              Principal: '*'
+              Action: s3:PutObject
+              Resource: arn:aws:s3:::growth-lab-bucket-files/*
+              Condition:
+                StringNotEquals:
+                  's3:x-amz-server-side-encryption': AES256
 
     LookupTable:
         Type: 'AWS::DynamoDB::Table'

@@ -5,8 +5,6 @@ const mime = require('mime-types');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3();
 
-// const kms = new AWS.KMS({apiVersion: '2014-11-01'});
-
 const DYNAMO_TABLE = 'LookUp'
 const S3_BUCKET = 'growth-lab-bucket-files'
 

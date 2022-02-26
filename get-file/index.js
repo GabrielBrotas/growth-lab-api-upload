@@ -2,8 +2,6 @@ const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3();
 
-// const kms = new AWS.KMS({apiVersion: '2014-11-01'});
-
 const S3_BUCKET = 'growth-lab-bucket-files'
 const DYNAMO_TABLE = 'LookUp'
 
@@ -16,10 +14,12 @@ const formatRequest = event => {
   };
 };
 
+console.log('asdahsudashkd')
 
 exports.handler = async (event) => {
     try {
         const { params: { id } } = formatRequest(event)
+        console.log('asdahsudashkd')
 
         const fileData = await dynamo.get({
             TableName: DYNAMO_TABLE,
@@ -29,6 +29,7 @@ exports.handler = async (event) => {
         }).promise()
 
         console.log({fileData})
+        console.log('asdahsudashkd')
         
         if(!fileData || Object.keys(fileData).length == 0 || fileData.Count == 0) throw new Error('File not found')
 
