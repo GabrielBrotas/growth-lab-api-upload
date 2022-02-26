@@ -14,12 +14,9 @@ const formatRequest = event => {
   };
 };
 
-console.log('asdahsudashkd')
-
 exports.handler = async (event) => {
     try {
         const { params: { id } } = formatRequest(event)
-        console.log('asdahsudashkd')
 
         const fileData = await dynamo.get({
             TableName: DYNAMO_TABLE,
@@ -28,9 +25,6 @@ exports.handler = async (event) => {
             }
         }).promise()
 
-        console.log({fileData})
-        console.log('asdahsudashkd')
-        
         if(!fileData || Object.keys(fileData).length == 0 || fileData.Count == 0) throw new Error('File not found')
 
         const obj = await s3.getObject({
