@@ -12,25 +12,46 @@ provider:
     growth-lab-files-bucket:
       name: growth-lab-files-bucket
 
+package:
+   individually: true
+
 functions:
-  - gl-get-file:
-      handler: get-file/index.handler
-      description: Get file from S3 and data from DynamoDB
-      events:
-        - httpApi:
-            method: get
-            path: /file/{id}
-      role: LambdaGetFileRole
+  gl-get-file:
+    handler: get-file/index.handler
+    description: Get file from S3 and data from DynamoDB
+    events:
+      - httpApi:
+          method: get
+          path: /file/{id}
+    role: LambdaGetFileRole
+    package:
+      exclude:
+        - upload-gl/**
+        - .gitignore
+        - .git/**
+        - .serverless/**
+        - package.json
+        - README.md
+        - yarn.lock
 
-  - gl-put-file:
-      handler: upload-gl/index.handler
-      description: Put file to S3 and DynamoDB
-      events:
-        - httpApi:
-            method: post
-            path: /upload
-      role: LambdaPutFileRole
-
+  gl-put-file:
+    handler: upload-gl/index.handler
+    description: Put file to S3 and DynamoDB
+    events:
+      - httpApi:
+          method: post
+          path: /upload
+    role: LambdaPutFileRole
+    package:
+      exclude:
+        - get-file/**
+        - .gitignore
+        - .git/**
+        - .serverless/**
+        - package.json
+        - README.md
+        - yarn.lock
+        
 resources:
   Resources:
     S3Bucket:
