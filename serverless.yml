@@ -44,9 +44,9 @@ resources:
       Properties:
         BucketName: growth-lab-bucket-files
         PublicAccessBlockConfiguration:
-          BlockPublicAcls: true
+          BlockPublicAcls: false
           BlockPublicPolicy: false
-          RestrictPublicBuckets: true
+          RestrictPublicBuckets: false
         BucketEncryption:
           ServerSideEncryptionConfiguration:
             - ServerSideEncryptionByDefault:
@@ -127,6 +127,23 @@ resources:
                     - dynamodb:Scan
                     - dynamodb:Query
                   Resource: arn:aws:dynamodb:us-east-1:*:table/LookUp/index/*
+                
+                - Effect: Allow
+                  Action: 
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents 
+                  Resource: arn:aws:logs:*:*:log-group:/aws/lambda/*:log-stream:*
+
+                - Effect: Allow
+                  Action: 
+                    - s3:GetObjectAcl
+                    - s3:GetObject
+                    - s3:GetObjectVersionAcl
+                    - s3:GetObjectVersionAttributes
+                    - s3:GetObjectVersion"
+                  Resource:
+                    - arn:aws:s3:::growth-lab-files-bucket
+                    - arn:aws:s3:::*/*
 
     LambdaPutFileRole:
       Type: AWS::IAM::Role
@@ -165,3 +182,21 @@ resources:
                   Action: 
                     - dynamodb:ListTables
                   Resource: "*"
+
+                - Effect: Allow 
+                  Action: 
+                    - logs:CreateLogStream
+                    - logs:PutLogEvents 
+                  Resource: arn:aws:logs:*:*:log-group:/aws/lambda/*:log-stream:*
+
+                - Effect: Allow
+                  Action: 
+                    - s3:PutObject
+                    - s3:GetObjectAcl
+                    - s3:GetObject
+                    - s3:ListBucket
+                    - s3:DeleteObject
+                    - s3:GetBucketAcl
+                  Resource:
+                    - arn:aws:s3:::growth-lab-files-bucket
+                    - arn:aws:s3:::*/*

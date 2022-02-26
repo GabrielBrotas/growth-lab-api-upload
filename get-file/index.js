@@ -2,8 +2,8 @@ const AWS = require('aws-sdk');
 const dynamo = new AWS.DynamoDB.DocumentClient();
 const s3 = new AWS.S3();
 
-const S3_BUCKET = 'growth-lab-bucket-files'
-const DYNAMO_TABLE = 'LookUp'
+const S3_BUCKET = 'growth-lab-bucket-files';
+const DYNAMO_TABLE = 'LookUp';
 
 const formatRequest = event => {
   return {
